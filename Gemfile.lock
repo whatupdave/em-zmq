@@ -1,0 +1,18 @@
+PATH
+  remote: .
+  specs:
+    em-zmq (0.0.1)
+      eventmachine
+      ffi-rzmq (>= 0.7.2)
+
+GEM
+  remote: http://rubygems.org/
+  specs:
+    eventmachine (0.12.10)
+    ffi-rzmq (0.8.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  em-zmq!

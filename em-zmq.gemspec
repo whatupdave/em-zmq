@@ -9,6 +9,9 @@ Gem::Specification.new do |s|
   s.email       = 'christopher.lloyd@gmail.com'
   s.homepage    = 'https://github.com/chrislloyd/em-zmq'
 
+  s.summary     = 'ZMQ bindings for EventMachine.'
+  s.description = s.summary
+
   s.add_dependency 'eventmachine'
   s.add_dependency 'ffi-rzmq', '>= 0.7.2'
 

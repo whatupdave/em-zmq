@@ -22,13 +22,15 @@ module EventMachine
       def send_data(data, more=false)
         sndmore = more ? ::ZMQ::SNDMORE : 0
 
-        success = socket.send_string(data.to_s, ::ZMQ::NOBLOCK | sndmore)
+        success = socket.send_string(data.to_s, ::ZMQ::NonBlocking | sndmore)
         self.notify_writable = true unless success
         success
       end
 
       def readable?
-        (socket.getsockopt(::ZMQ::EVENTS) & ::ZMQ::POLLIN) == ::ZMQ::POLLIN
+        a = []
+        socket.getsockopt(::ZMQ::EVENTS,a)
+        (a.first & ::ZMQ::POLLIN) == ::ZMQ::POLLIN
       end
 
       def notify_readable
@@ -58,7 +60,7 @@ module EventMachine
 
       def get_message
         msg = ::ZMQ::Message.new
-        socket.recv(msg, ::ZMQ::NOBLOCK) ? msg : nil
+        socket.recvmsg(msg, ::ZMQ::NonBlocking) ? msg : nil
       end
 
       def detach

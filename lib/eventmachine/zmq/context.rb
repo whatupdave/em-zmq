@@ -24,7 +24,9 @@ module EventMachine
       def create sock, handler=nil, *args, &blk
         klass = EM.send(:klass_from_handler, Connection, handler, *args)
 
-        EM.watch(sock.getsockopt(::ZMQ::FD), klass, *args, &blk).tap {|conn|
+        a = []
+        sock.getsockopt(::ZMQ::FD,a)
+        EM.watch(a.first, klass, *args, &blk).tap {|conn|
           conn.instance_variable_set(:@socket, sock)
 
           if READ.include? sock.name.downcase.to_sym

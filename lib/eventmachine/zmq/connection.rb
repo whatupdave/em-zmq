@@ -12,17 +12,18 @@ module EventMachine
       end
 
       def subscribe channel
-        socket.setsockopt ZMQ::SUBSCRIBE, channel
+        socket.setsockopt ::ZMQ::SUBSCRIBE, channel
       end
 
       def unsubscribe channel
-        socket.setsockopt ZMQ::UNSUBSCRIBE, channel
+        socket.setsockopt ::ZMQ::UNSUBSCRIBE, channel
       end
 
       def send_data(data, more=false)
         sndmore = more ? ::ZMQ::SNDMORE : 0
 
-        success = socket.send_string(data.to_s, ::ZMQ::NonBlocking | sndmore)
+        rc = socket.send_string(data.to_s, ::ZMQ::NonBlocking | sndmore)
+        success = ::ZMQ::Util.resultcode_ok?(rc)
         self.notify_writable = true unless success
         success
       end
@@ -60,7 +61,8 @@ module EventMachine
 
       def get_message
         msg = ::ZMQ::Message.new
-        socket.recvmsg(msg, ::ZMQ::NonBlocking) ? msg : nil
+        rc = socket.recvmsg(msg, ::ZMQ::NonBlocking) 
+        msg if ::ZMQ::Util.resultcode_ok?(rc)
       end
 
       def detach
